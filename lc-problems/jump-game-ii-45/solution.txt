@@ -1,0 +1,82 @@
+function signature:
+
+func jump(nums []int) int {    
+}
+
+We are trying to find the minimum amount of jumps to reach the last element in
+the slice. 
+
+Idea #1: cache the minimum amount of jumps to reach the i^th index for each i, 
+continuing until we reach the last element of the list. Intuitively, I want to 
+try this iteratively and build a bottom-up solution. 
+
+Algorithm plan:
+0) Initialize a distance slice where each value is MaxInt.
+1) Starting at index current index, see all the potential destinations we can reach.
+2) Update the amount of jumps needed to get to each index and if it is the minimum, update the distance slice.
+3) Iterate through the list one by one until we reach the last element. 
+4) Return the value we have at the last element of the distance slice. 
+
+
+// Implementation.
+func jump(nums []int) int {    
+    // Initialize the minDistances to maxInt.
+    minDistances := make([]int, len(nums))
+
+    // Start at 1 because distance to 0 should be 0.
+    for i := 1; i < len(nums); i++ {
+        minDistances[i] = math.MaxInt64
+    }
+
+    // Only iterate to the penultimate element, because we can't move forward from the last.
+    for i := 0; i < len(nums)-1; i++ {
+        steps := nums[i]
+        // New index is i + j for all j <= steps.
+        for j := 1; j <= steps; j++ {
+            newInd = i + j
+            if minDistances[i] + 1 < minDistances[newInd] {
+                minDistances[newInd] = minDistances[i] + 1
+            }
+        }
+    }
+    return minDistances[len(nums)-1]
+}
+
+[2,3,1,1,4]
+
+distances [0, inf, inf, inf, inf]
+distances [0, 1,   1,   inf, inf]
+distances [0, 1,   1,   2,   2  ]
+distances [0, 1,   1,   2,   2  ]
+distances [0, 1,   1,   2,   2  ]
+
+// Test.
+
+Concept: we can build our solution out by calculating the minimum for each node
+until we reach the end. 
+
+Test: 
+
+func testJumpCorrectness(t *testing.T) {
+    testCases := []struct{
+        description string
+        input       []int
+        want        int
+    } {
+        {
+            description: "success",
+            input:       []int{2, 3, 1, 1, 4},
+            result:      2,
+        }
+    }
+    for _, tc := range(testCases) {
+        t.Run(tc.description, func(t *testing.T) { 
+            res := jump(tc.input)
+            if res != tc.want {
+                t.Errorf("res != want: %d != %d", res, tc.want)
+            }
+        })
+    }
+}
+
+[2,3,1,1,4]
