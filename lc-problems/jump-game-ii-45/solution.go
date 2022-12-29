@@ -19,6 +19,9 @@ func jump(nums []int) int {
 		// New index is i + j for all j <= steps.
 		for j := 1; j <= steps; j++ {
 			newInd := i + j
+			if newInd >= len(nums) {
+				continue
+			}
 			if minDistances[i]+1 < minDistances[newInd] {
 				minDistances[newInd] = minDistances[i] + 1
 			}

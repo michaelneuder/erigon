@@ -30,6 +30,11 @@ func TestJumpCorrectness(t *testing.T) {
 			input:       []int{1, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1},
 			want:        10,
 		},
+		{
+			description: "bounds_check",
+			input:       []int{2, 1},
+			want:        1,
+		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.description, func(t *testing.T) {
