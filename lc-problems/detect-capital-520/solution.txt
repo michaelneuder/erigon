@@ -1,0 +1,42 @@
+func detectCapitalUse(word string) bool {
+    
+}
+
+We want to detect if the input string is "correctly" capitalized. We know we 
+will need to touch each letter of the word no matter what, so the algorithm will
+be O(n) where n is the length of the string. 
+
+Simplest solution:
+0) if the string is 1 return true.
+1) determine which situation we are in from the first two letters. 
+2) Iterate through each remaining letter of the string to determine if we are good.
+
+Alternate solution:
+use a regex and match it
+
+
+func detectCapitalUse(word string) bool {
+    if len(word) == 1 {
+        return true
+    }
+
+    runeWord = []rune(word)
+
+    // Only invalid two character combination is lower-upper.
+    if unicode.IsLower(runeWord[0]) && unicode.IsUpper(runeWord[1]) { 
+        return false
+    }
+
+    remainingCapital = false
+    // If first two are capital remaining letters need to be capital.
+    if unicode.IsUpper(runeWord[0]) && unicode.IsUpper(runeWord[1]) {
+        remainingCapital = true
+    }
+
+    for _, l := range word[2:] {
+        if unicode.IsUpper(l) != remainingCapital {
+            return false
+        }
+    }
+    return true
+}
